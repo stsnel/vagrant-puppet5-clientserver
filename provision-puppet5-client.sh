@@ -1,11 +1,25 @@
 #!/bin/sh
 
-. /tmp/settings.sh
+. /tmp/.env
+
+LSBRELEASECODENAME=$(lsb_release -cs)
+
+if [ -z "$LSBRELEASECODENAME" ]
+then
+    echo "Error: unable to determine LSB release"
+    exit 1
+fi
+
+if [ "$LSBRELEASECODENAME" != "xenial" -a "$LSBRELEASECODENAME" != "bionic" ]
+then
+    echo "Error: unexpected LSB release: $LSBRELEASECODENAME"
+    exit 1
+fi
 
 apt install -y nmap
 
-wget https://apt.puppetlabs.com/puppet5-release-xenial.deb
-dpkg -i puppet5-release-xenial.deb
+wget https://apt.puppetlabs.com/puppet5-release-$LSBRELEASECODENAME.deb
+dpkg -i puppet5-release-$LSBRELEASECODENAME.deb
 apt update
 apt install -y puppet-agent
 
@@ -13,14 +27,14 @@ cat << PUPPETCONF > /etc/puppetlabs/puppet/puppet.conf
 [main]
 
 environment = production
-certname = client.local
-server = master.local
+certname = $CLIENTHOSTNAME
+server = $SERVERHOSTNAME
 PUPPETCONF
 
-echo "$MASTERIP master.local" >> /etc/hosts
-echo "$CLIENTIP client.local" >> /etc/hosts
+echo "$MASTERIP $SERVERHOSTNAME" >> /etc/hosts
+echo "$CLIENTIP $CLIENTHOSTNAME" >> /etc/hosts
 
-while nmap -Pn -p 8140 master.local | grep /tcp | grep -v open
+while nmap -Pn -p 8140 $SERVERHOSTNAME | grep /tcp | grep -v open
 do echo Waiting for Puppet server to start ...
    sleep 1
 done
