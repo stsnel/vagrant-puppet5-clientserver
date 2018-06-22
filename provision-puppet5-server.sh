@@ -5,7 +5,18 @@
 wget https://apt.puppetlabs.com/puppet5-release-xenial.deb
 dpkg -i puppet5-release-xenial.deb
 apt update
-apt install -y puppetserver puppet-agent
+
+if [ "$PUPPETAGENTVERSIONSERVER" = "latest" ]
+then apt install -y puppet-agent
+else apt install -y puppet-agent=$PUPPETAGENTVERSIONSERVER
+     apt-mark hold puppet-agent
+fi
+
+if [ "$PUPPETSERVERVERSION" = "latest" ]
+then apt install -y puppetserver
+else apt install -y puppetserver=$PUPPETSERVERVERSION
+     apt-mark hold puppetserver
+fi
 
 echo "$MASTERIP $SERVERHOSTNAME" >> /etc/hosts
 echo "$CLIENTIP $CLIENTHOSTNAME" >> /etc/hosts

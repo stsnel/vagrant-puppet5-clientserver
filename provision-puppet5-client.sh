@@ -21,7 +21,12 @@ apt install -y nmap
 wget https://apt.puppetlabs.com/puppet5-release-$LSBRELEASECODENAME.deb
 dpkg -i puppet5-release-$LSBRELEASECODENAME.deb
 apt update
-apt install -y puppet-agent
+
+if [ "$PUPPETAGENTVERSIONCLIENT" = "latest" ]
+then apt install -y puppet-agent
+else apt install -y puppet-agent=$PUPPETAGENTVERSIONCLIENT
+     apt-mark hold puppet-agent
+fi
 
 cat << PUPPETCONF > /etc/puppetlabs/puppet/puppet.conf
 [main]
