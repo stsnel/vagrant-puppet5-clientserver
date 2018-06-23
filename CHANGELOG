@@ -1,3 +1,8 @@
+0.0.3:
+  - Add configuration option for Puppet server version
+  - Add configuration options for Puppet agent versions
+  - Install PuppetDB and Puppetboard on the puppet master
+  - Fix time synchronization issue on VMs
 
 0.0.2:
   - Use vagrant-env for configuration

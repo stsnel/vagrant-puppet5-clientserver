@@ -4,17 +4,21 @@ Vagrant file and provisioning scripts for a Puppet 5 server and client
 
 # Intended purpose
 
-The purpose of these scripts is to set up a local Puppet 5 server VM and a VM running the Puppet 5 agent
-for local testing of Puppet modules. The provisioning script for the puppet master is not suitable
-for configuring a publically accessible server, because it has unsafe security settings.
+These scripts configure a local Puppet 5 server VM and a VM running the Puppet 5 agent. These VMs can be
+used for local testing of puppet modules. PuppetDB and Puppetboard are also installed on the puppet
+master. The default Puppetboard URL is: http://192.168.2.6:5000
+
+The provisioning script for the puppet master is not suitable for configuring a publically accessible server,
+because of settings that would be insecure on a nonlocal environment. For example, the puppet master is
+configured with autosigning enabled, and access to Puppetboard is not secured.
 
 # System requirements
 
 This Vagrantfile has been tested with Vagrant 2.0.2. It requires the vagrant-env plugin, which
 can be installed with: _vagrant plugin install vagrant-env_
 
-Vagrant requires approximately 3 to 4 GB memory for the basic configuration. By default, the server
-VM is assigned up to 4 GB and the client VM is asssigned up to 2 GB. If you're testing an application
+Vagrant requires approximately 4 to 5 GB of memory for the basic configuration. By default, the server
+VM is assigned up to 4 GB and the client VM is assigned up to 2 GB. If you're testing an application
 stack on the client VM, you might have to increase the amount of assigned memory in the .env file.
 
 # Usage
