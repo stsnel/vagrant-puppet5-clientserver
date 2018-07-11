@@ -1,34 +1,51 @@
 #!/bin/sh
+
 set -e
+
+progress_message () {
+  /usr/bin/perl -e 'print "*" x 80 . "\n"'
+  echo "* $1"
+  /usr/bin/perl -e 'print "*" x 80 . "\n"'
+}
+
+progress_message "Loading settings"
 . /tmp/.env
 
+progress_message "Downloading Puppet release package"
 wget https://apt.puppetlabs.com/puppet5-release-xenial.deb
+
+progress_message "Installing Puppet release package"
 dpkg -i puppet5-release-xenial.deb
 apt update
 
+progress_message "Installing Puppet agent"
 if [ "$PUPPETAGENTVERSIONSERVER" = "latest" ]
 then apt install -y puppet-agent
 else apt install -y puppet-agent=$PUPPETAGENTVERSIONSERVER
      apt-mark hold puppet-agent
 fi
 
+progress_message "Installing Puppet server"
 if [ "$PUPPETSERVERVERSION" = "latest" ]
 then apt install -y puppetserver
 else apt install -y puppetserver=$PUPPETSERVERVERSION
      apt-mark hold puppetserver
 fi
 
+progress_message "Updating hosts file"
 echo "$MASTERIP $SERVERHOSTNAME" >> /etc/hosts
 echo "$CLIENTIP $CLIENTHOSTNAME" >> /etc/hosts
 
+progress_message "Updating Puppet configuration file"
 cat << PUPPETCONF > /etc/puppetlabs/puppet/puppet.conf
 [main]
 certname = $SERVERHOSTNAME
 PUPPETCONF
 
-# Automatically generates CA certificate
+progress_message "Generating CA certificate"
 /opt/puppetlabs/bin/puppet cert list
 
+progress_message "Creating manifest files"
 manifestdir=/etc/puppetlabs/code/environments/production/manifests
 cat << CLIENTMANIFEST > $manifestdir/$CLIENTHOSTNAME.pp
 node '$CLIENTHOSTNAME' {
@@ -65,6 +82,7 @@ node '$SERVERHOSTNAME' {
 }
 SERVERMANIFEST
 
+progress_message "Creating hiera files"
 hieradir=/etc/puppetlabs/code/environments/production/data/nodes
 mkdir -p $hieradir
 cat << CLIENTHIERA > $hieradir/$CLIENTHOSTNAME.yaml
@@ -92,12 +110,15 @@ puppetboard::enable_catalog: true
 puppetboard::revision: $PUPPETBOARDVERSION
 SERVERHIERA
 
+progress_message "Creating autosign whitelist configuration file"
 cat << AUTOSIGNCONF > /etc/puppetlabs/puppet/autosign.conf
 $AUTOSIGNWHITELIST
 AUTOSIGNCONF
 
+progress_message "Starting Puppet server"
 systemctl start puppetserver
 
+progress_message "Installing Puppet modules"
 installmodulecmd="sudo /opt/puppetlabs/bin/puppet module install"
 moduledir="/etc/puppetlabs/code/environments/production/modules"
 $installmodulecmd --target-dir $moduledir puppetlabs/puppetdb
@@ -107,8 +128,14 @@ $installmodulecmd --target-dir $moduledir stankevich/python
 
 # This initial install is needed for setting up the
 # TLS certificate files
+progress_message "Installing PuppetDB"
 apt install puppetdb
+
+progress_message "Configuring PuppetDB TLS certificates"
 /opt/puppetlabs/bin/puppetdb ssl-setup
 
+progress_message "Running puppet agent on server"
 sudo /opt/puppetlabs/bin/puppet apply $manifestdir/$SERVERHOSTNAME.pp
+
+progress_message "Restarting PuppetDB"
 sudo systemctl restart puppetdb
