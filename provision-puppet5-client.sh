@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 . /tmp/.env
 
@@ -44,4 +45,4 @@ do echo Waiting for Puppet server to start ...
    sleep 1
 done
 
-/opt/puppetlabs/bin/puppet agent -t
+/opt/puppetlabs/bin/puppet agent -t || /bin/true

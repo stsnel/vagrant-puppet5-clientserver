@@ -1,5 +1,5 @@
 #!/bin/sh
-
+set -e
 . /tmp/.env
 
 wget https://apt.puppetlabs.com/puppet5-release-xenial.deb
