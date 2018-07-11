@@ -3,9 +3,9 @@
 set -e
 
 progress_message () {
-  /usr/bin/perl -e 'print "*" x 80 . "\n"'
+  echo "********************************************************************************"
   echo "* $1"
-  /usr/bin/perl -e 'print "*" x 80 . "\n"'
+  echo "********************************************************************************"
 }
 
 progress_message "Loading settings"
