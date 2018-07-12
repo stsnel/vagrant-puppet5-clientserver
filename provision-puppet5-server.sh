@@ -135,6 +135,9 @@ cat << AUTOSIGNCONF > /etc/puppetlabs/puppet/autosign.conf
 $AUTOSIGNWHITELIST
 AUTOSIGNCONF
 
+progress_message "Changing ownership puppet files"
+chown -R puppet:puppet /etc/puppetlabs/code
+
 progress_message "Starting Puppet server"
 systemctl start puppetserver
 
