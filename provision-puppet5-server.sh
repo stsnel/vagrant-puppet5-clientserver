@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -31,6 +31,26 @@ then apt install -y puppetserver
 else apt install -y puppetserver=$PUPPETSERVERVERSION
      apt-mark hold puppetserver
 fi
+
+progress_message "Enabling sudo to puppet account"
+chsh -s /bin/bash puppet
+
+progress_message "Installing RVM (for managing Ruby interpreter)"
+curl -sSL https://rvm.io/mpapis.asc | gpg --import -
+curl -sSL https://get.rvm.io | bash -s stable
+source /etc/profile.d/rvm.sh
+usermod -aG rvm vagrant
+usermod -aG rvm puppet
+usermod -aG rvm root
+newgrp rvm
+
+progress_message "Installing Ruby for running rspec tests"
+rvm install $PUPPETSERVERRUBYVERSION
+rvm use $PUPPETSERVERRUBYVERSION
+
+progress_message "Installing Ruby gems for running rspec tests"
+gem install rake bundler
+gem install puppet puppet-lint puppet-syntax puppetlabs_spec_helper rubocop
 
 progress_message "Updating hosts file"
 echo "$MASTERIP $SERVERHOSTNAME" >> /etc/hosts
