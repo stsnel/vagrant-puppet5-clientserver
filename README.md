@@ -21,6 +21,13 @@ Vagrant requires approximately 4 to 5 GB of memory for the basic configuration. 
 VM is assigned up to 4 GB and the client VM is assigned up to 2 GB. If you're testing an application
 stack on the client VM, you might have to increase the amount of assigned memory in the .env file.
 
+# Supported client distributions
+
+* CentOS 6
+* CentOS 7
+* Ubuntu 16.04 LTS
+* Ubuntu 18.04 LTS
+
 # Usage
 
 * Optionally customize the configuration in the .env file

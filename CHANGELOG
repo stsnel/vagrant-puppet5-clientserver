@@ -1,3 +1,9 @@
+0.0.4:
+  - Install RVM, Ruby and gems on puppet server for running spec tests
+  - Add progress messages to provisioning scripts
+  - Let provisioning scripts abort on errors
+  - Add support for CentOS 6 and CentOS 7 clients
+
 0.0.3:
   - Add configuration option for Puppet server version
   - Add configuration options for Puppet agent versions
