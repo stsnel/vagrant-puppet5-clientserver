@@ -1,0 +1,5 @@
+#!/bin/bash
+source .env
+vagrant ssh server -- "sudo /opt/puppetlabs/bin/puppet cert clean $CLIENTHOSTNAME"
+vagrant destroy -f client
+time vagrant up client
