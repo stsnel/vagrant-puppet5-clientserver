@@ -32,6 +32,9 @@ else apt install -y puppetserver=$PUPPETSERVERVERSION
      apt-mark hold puppetserver
 fi
 
+progress_message "Installing Puppet Development Kit"
+apt install -y pdk
+
 progress_message "Enabling sudo to puppet account"
 chsh -s /bin/bash puppet
 
