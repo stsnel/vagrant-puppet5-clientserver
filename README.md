@@ -35,6 +35,10 @@ stack on the client VM, you might have to increase the amount of assigned memory
 
 # Scripts provided:
 
+On the host:
+* redeploy-client: destroys and re-deploys the client VM. Useful for redeploying the client VM after
+  changes in the .env file.
+
 On the server:
 * vldt : validates Puppet DSL, Hiera YAML and ERB files
 
