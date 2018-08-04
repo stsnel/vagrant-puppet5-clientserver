@@ -103,5 +103,12 @@ do echo Waiting for Puppet server to start ...
    sleep 1
 done
 
+progress_message "Creating puprun script"
+cat << PUPRUN >> /usr/local/bin/puprun
+#!/bin/sh
+sudo /opt/puppetlabs/bin/puppet agent -t \$*
+PUPRUN
+chmod 0755 /usr/local/bin/puprun
+
 progress_message "Running Puppet agent"
 /opt/puppetlabs/bin/puppet agent -t || /bin/true

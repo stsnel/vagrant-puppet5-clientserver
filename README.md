@@ -37,3 +37,6 @@ stack on the client VM, you might have to increase the amount of assigned memory
 
 On the server:
 * vldt : validates Puppet DSL, Hiera YAML and ERB files
+
+On the client:
+* puprun: performs a puppet agent run (shorthand for: _sudo /opt/puppetlabs/bin/puppet agent -t_)
