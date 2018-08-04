@@ -1,0 +1,105 @@
+#!/usr/bin/perl
+#
+# vldt validates puppet files. It supports the following file types:
+# - Puppet code
+# - Embedded ruby code
+# - YAML files (Hiera)
+#
+
+use strict;
+use warnings;
+
+use Capture::Tiny ':all';
+use Term::ANSIColor;
+
+my $puppetcmd = "/opt/puppetlabs/bin/puppet";
+
+if ( scalar @ARGV == 0 )
+{   print "Error: vldt should have at least one argument: the file(s) you want to validate.\n";
+    exit 1;
+}
+
+foreach my $file ( @ARGV )
+{   if ( scalar @ARGV > 1 )
+    {   print "Results for file $file: \n\n";
+    }
+
+    if ( ! -e $file )
+    {   print "Error: skipping \"$file\". It does not exist.\n\n";
+        next;
+    }
+
+    if ( ! -f $file )
+    {   print "Error: skipping \"$file\". It is not a regular file.\n\n";
+        next;
+    }
+
+    if ( $file =~ /\.pp$/ )
+    {   validate_puppet($file);
+    }
+    elsif ( $file =~ /\.yaml$/ )
+    {   validate_yaml($file);
+    }
+    elsif ( $file =~ /\.erb$/ )
+    {   validate_erb($file);
+    }
+    else
+    {   print "Skipping file because of unknown extension.\n";
+    }
+
+    print "\n";
+}
+
+sub validate_puppet
+{   my ($filename) = @_;
+    my ($output,@result) = capture_merged
+        {   system("$puppetcmd parser validate $filename");
+        };
+
+    if ( $result[0] == 0 )
+    {   print color('green');
+        print "Validation by puppet parser OK.\n";
+        print color('reset');
+    }
+    else
+    {   print color('red');
+        print "Validation by puppet parser FAILED. Output:\n$output";
+        print color('reset');
+    }
+}
+
+sub validate_yaml
+{   my ($filename) = @_;
+    my ($output,@result) = capture_merged
+        {   system("ruby -ryaml -e \"YAML.load_file \'$filename\'\"");
+        };
+
+    if ( not $output )
+    {   print color('green');
+        print "Validation by YAML module OK.\n";
+        print color('reset');
+    }
+    else
+    {   print color('red');
+        print "Validation by YAML module FAILED. Output:\n$output";
+        print color('reset');
+    }
+}
+
+sub validate_erb
+{   my ($filename) = @_;
+    my ($output,@result) = capture_merged
+        {   system("erb -P -x -T \'-\' $filename | ruby -c");
+        };
+
+    if ( $output =~ /Syntax OK/ )
+    {   print color('green');
+        print "Validation by Ruby OK.\n";
+        print color('reset');
+    }
+    else
+    {   print color('red');
+        print "Validation by Ruby FAILED. Output:\n$output";
+        print color('reset');
+    }
+}

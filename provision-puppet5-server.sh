@@ -161,7 +161,12 @@ progress_message "Configuring PuppetDB TLS certificates"
 /opt/puppetlabs/bin/puppetdb ssl-setup
 
 progress_message "Running puppet agent on server"
-sudo /opt/puppetlabs/bin/puppet apply $manifestdir/$SERVERHOSTNAME.pp
+/opt/puppetlabs/bin/puppet apply $manifestdir/$SERVERHOSTNAME.pp
 
 progress_message "Restarting PuppetDB"
-sudo systemctl restart puppetdb
+systemctl restart puppetdb
+
+progress_message "Installing validation script"
+apt install libcapture-tiny-perl
+mv /tmp/vldt /usr/local/bin
+chmod 0755 /usr/local/bin/vldt

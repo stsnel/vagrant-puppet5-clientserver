@@ -32,3 +32,8 @@ stack on the client VM, you might have to increase the amount of assigned memory
 
 * Optionally customize the configuration in the .env file
 * _vagrant up_
+
+# Scripts provided:
+
+On the server:
+* vldt : validates Puppet DSL, Hiera YAML and ERB files

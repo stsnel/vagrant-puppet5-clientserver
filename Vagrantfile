@@ -15,6 +15,7 @@ Vagrant.configure("2") do |config|
       v.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
     end
     server.vm.provision "file", source: ".env", destination: "/tmp/.env"
+    server.vm.provision "file", source: "vldt", destination: "/tmp/vldt"
     server.vm.provision :shell, :path => 'provision-puppet5-server.sh'
     server.vm.network "private_network", ip: ENV['MASTERIP']
   end
