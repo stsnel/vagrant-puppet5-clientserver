@@ -1,3 +1,11 @@
+0.0.5:
+  - Add vldt script for validating puppet DSL files, Hiera YAML files
+    and ERB template files on server
+  - Add puprun script for starting puppet agent runs on client
+  - Add redeploy-client script
+  - Add option for synchronizing .gitconfig file from host to server
+  - Install Puppet Development Kit on server
+
 0.0.4:
   - Install RVM, Ruby and gems on puppet server for running spec tests
   - Add progress messages to provisioning scripts
