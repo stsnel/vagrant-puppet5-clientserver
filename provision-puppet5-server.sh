@@ -170,3 +170,10 @@ progress_message "Installing validation script"
 apt install libcapture-tiny-perl
 mv /tmp/vldt /usr/local/bin
 chmod 0755 /usr/local/bin/vldt
+
+if [ -f "/tmp/.gitconfig" ]
+then
+    progress_message "Copying git configuration"
+    cp /tmp/.gitconfig ~vagrant
+    cp /tmp/.gitconfig ~puppet
+fi

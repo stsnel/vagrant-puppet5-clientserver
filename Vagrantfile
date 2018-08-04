@@ -16,6 +16,9 @@ Vagrant.configure("2") do |config|
     end
     server.vm.provision "file", source: ".env", destination: "/tmp/.env"
     server.vm.provision "file", source: "vldt", destination: "/tmp/vldt"
+    if File.exists?(".gitconfig") and ENV['COPY_GITCONFIG'] == 'yes'
+        config.vm.provision "file", :source => ".gitconfig", :destination => "/tmp/.gitconfig"
+    end
     server.vm.provision :shell, :path => 'provision-puppet5-server.sh'
     server.vm.network "private_network", ip: ENV['MASTERIP']
   end
