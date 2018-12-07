@@ -53,7 +53,8 @@ rvm use $PUPPETSERVERRUBYVERSION
 
 progress_message "Installing Ruby gems for running rspec tests"
 gem install rake bundler
-gem install puppet puppet-lint puppet-syntax puppetlabs_spec_helper rubocop
+gem install puppet -v $PUPPETGEMVERSION
+gem install puppet-lint puppet-syntax puppetlabs_spec_helper rubocop
 
 progress_message "Updating hosts file"
 echo "$MASTERIP $SERVERHOSTNAME" >> /etc/hosts
