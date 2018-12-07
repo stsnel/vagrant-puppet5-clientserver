@@ -2,6 +2,8 @@
 
 set -e
 
+export DEBIAN_FRONTEND=noninteractive
+
 progress_message () {
   echo "********************************************************************************"
   echo "* $1"
@@ -16,24 +18,24 @@ wget https://apt.puppetlabs.com/puppet5-release-xenial.deb
 
 progress_message "Installing Puppet release package"
 dpkg -i puppet5-release-xenial.deb
-apt update
+apt-get update
 
 progress_message "Installing Puppet agent"
 if [ "$PUPPETAGENTVERSIONSERVER" = "latest" ]
-then apt install -y puppet-agent
-else apt install -y puppet-agent=$PUPPETAGENTVERSIONSERVER
+then apt-get install -y puppet-agent
+else apt-get install -y puppet-agent=$PUPPETAGENTVERSIONSERVER
      apt-mark hold puppet-agent
 fi
 
 progress_message "Installing Puppet server"
 if [ "$PUPPETSERVERVERSION" = "latest" ]
-then apt install -y puppetserver
-else apt install -y puppetserver=$PUPPETSERVERVERSION
+then apt-get install -y puppetserver
+else apt-get install -y puppetserver=$PUPPETSERVERVERSION
      apt-mark hold puppetserver
 fi
 
 progress_message "Installing Puppet Development Kit"
-apt install -y pdk
+apt-get install -y pdk
 
 progress_message "Enabling sudo to puppet account"
 chsh -s /bin/bash puppet
@@ -156,7 +158,7 @@ $installmodulecmd --target-dir $moduledir stankevich/python
 # This initial install is needed for setting up the
 # TLS certificate files
 progress_message "Installing PuppetDB"
-apt install puppetdb
+apt-get install puppetdb
 
 progress_message "Configuring PuppetDB TLS certificates"
 /opt/puppetlabs/bin/puppetdb ssl-setup
@@ -168,7 +170,7 @@ progress_message "Restarting PuppetDB"
 systemctl restart puppetdb
 
 progress_message "Installing validation script"
-apt install libcapture-tiny-perl
+apt-get install libcapture-tiny-perl
 mv /tmp/vldt /usr/local/bin
 chmod 0755 /usr/local/bin/vldt
 

@@ -2,6 +2,8 @@
 
 set -e
 
+export DEBIAN_FRONTEND=noninteractive
+
 progress_message () {
   echo "********************************************************************************"
   echo "* $1"
@@ -42,7 +44,7 @@ progress_message "Installing nmap"
 if [ "$distribution" = "CentOS" ]
 then yum install -y nmap
 elif [ "$distribution" = "Ubuntu" ]
-then apt install -y nmap
+then apt-get install -y nmap
 else
      echo "Error: no way to install nmap for distribution $distribution"
      exit 1
@@ -58,7 +60,7 @@ then
     wget https://apt.puppetlabs.com/puppet5-release-$distributionversion.deb
     progress_message "Installing Puppet release package"
     dpkg -i puppet5-release-$distributionversion.deb
-    apt update
+    apt-get update
 else
     echo "Error: no way to add puppet repository for distribution $distribution"
     exit 1
@@ -76,8 +78,8 @@ then
 elif [ "$distribution" = "Ubuntu" ]
 then
      if [ "$PUPPETAGENTVERSIONCLIENT" = "latest" ]
-     then apt install -y puppet-agent
-     else apt install -y puppet-agent=$PUPPETAGENTVERSIONCLIENT
+     then apt-get install -y puppet-agent
+     else apt-get install -y puppet-agent=$PUPPETAGENTVERSIONCLIENT
           apt-mark hold puppet-agent
      fi
 else
