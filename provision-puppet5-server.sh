@@ -153,7 +153,6 @@ moduledir="/etc/puppetlabs/code/environments/production/modules"
 $installmodulecmd --target-dir $moduledir puppetlabs/puppetdb
 $installmodulecmd --target-dir $moduledir puppet/puppetboard
 $installmodulecmd --target-dir $moduledir puppetlabs/apache
-$installmodulecmd --target-dir $moduledir stankevich/python
 
 # This initial install is needed for setting up the
 # TLS certificate files
