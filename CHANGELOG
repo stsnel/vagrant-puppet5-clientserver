@@ -1,3 +1,8 @@
+0.0.6:
+  - Fix apt warning messages
+  - Add parameter for puppet gem version
+  - Switch from stankevich/python module to puppet/python
+
 0.0.5:
   - Add vldt script for validating puppet DSL files, Hiera YAML files
     and ERB template files on server
