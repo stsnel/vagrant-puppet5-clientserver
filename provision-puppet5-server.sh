@@ -41,7 +41,7 @@ progress_message "Enabling sudo to puppet account"
 chsh -s /bin/bash puppet
 
 progress_message "Installing RVM (for managing Ruby interpreter)"
-curl -sSL https://rvm.io/mpapis.asc | gpg --import -
+gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 curl -sSL https://get.rvm.io | bash -s stable
 source /etc/profile.d/rvm.sh
 usermod -aG rvm vagrant
