@@ -150,6 +150,9 @@ systemctl start puppetserver
 progress_message "Installing Puppet modules"
 installmodulecmd="sudo /opt/puppetlabs/bin/puppet module install"
 moduledir="/etc/puppetlabs/code/environments/production/modules"
+# Pin stdlib to version 5.2.0, because the puppetboard module
+# doesn't support stdlib 6.x yet, as of puppetboard version 5.0.0
+$installmodulecmd --target-dir $moduledir --version 5.2.0 puppetlabs/stdlib
 $installmodulecmd --target-dir $moduledir puppetlabs/puppetdb
 $installmodulecmd --target-dir $moduledir puppet/puppetboard
 $installmodulecmd --target-dir $moduledir puppetlabs/apache
